@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.navshainc/noshup",
+  "title": "NoshUp",
+  "description": "AI-powered grocery and meal planning platform. Discover meals, plan weekly menus, find grocery deals, and track food budgets. All tools are read-only and scoped to the authenticated user's household.",
+  "version": "1.0.0",
+  "websiteUrl": "https://noshup.ca",
+  "repository": {
+    "url": "https://github.com/navshainc/noshup-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.noshup.ca/mcp"
+    }
+  ]
+}
