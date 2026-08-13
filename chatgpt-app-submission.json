@@ -40,7 +40,7 @@
       },
       "justifications": {
         "read_only_justification": "Searches NoshUp's cached flyer deal database for current Canadian grocery store promotions by item name or store, returning deal data without modifying any records.",
-        "open_world_justification": "Reads from NoshUp's internal deal cache populated by scheduled flyer fetch jobs and does not write to or query external third-party systems at runtime.",
+        "open_world_justification": "Reads from NoshUp's internal deal cache populated by scheduled flyer fetch jobs and does not write to or query any external third-party system at runtime.",
         "destructive_justification": "Does not delete, overwrite, or perform any irreversible actions."
       }
     },
