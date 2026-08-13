@@ -1,0 +1,152 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "NoshUp",
+    "subtitle": "Plan meals, find deals, track budget",
+    "description": "NoshUp helps users discover meals by cuisine and dietary preference, view weekly meal plans, check grocery lists with matched flyer deals, and track grocery spending across categories. All tools are read-only and scoped to the authenticated user's household.",
+    "category": "FOOD"
+  },
+  "tools": {
+    "search_meals": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Queries NoshUp's internal recipe catalogue by cuisine, dietary preference, ingredient, or meal type and returns matching meal metadata without creating or modifying any data.",
+        "open_world_justification": "Only reads from NoshUp's private recipe database and does not write to or interact with any public internet or third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform any irreversible actions."
+      }
+    },
+    "get_recipe": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves full recipe details (ingredients, steps, prep time) for a specific meal by UUID without modifying any data.",
+        "open_world_justification": "Only reads from NoshUp's private recipe database and does not interact with external systems.",
+        "destructive_justification": "Does not delete, overwrite, or perform any irreversible actions."
+      }
+    },
+    "get_flyer_deals": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Searches NoshUp's cached flyer deal database for current Canadian grocery store promotions by item name or store, returning deal data without modifying any records.",
+        "open_world_justification": "Reads from NoshUp's internal deal cache populated by scheduled flyer fetch jobs and does not write to or query external third-party systems at runtime.",
+        "destructive_justification": "Does not delete, overwrite, or perform any irreversible actions."
+      }
+    },
+    "get_meal_plan": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves the authenticated user's household weekly meal plan entries from NoshUp's database without creating, updating, or deleting plans.",
+        "open_world_justification": "Only reads from the user's private household data in NoshUp and does not interact with external systems.",
+        "destructive_justification": "Does not delete, overwrite, or perform any irreversible actions on meal plans."
+      }
+    },
+    "get_grocery_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves the authenticated user's household grocery list with deduplicated items, categories, and matched flyer deal prices without modifying any data.",
+        "open_world_justification": "Only reads from the user's private household data in NoshUp and does not interact with external systems.",
+        "destructive_justification": "Does not delete, overwrite, or perform any irreversible actions on grocery lists."
+      }
+    },
+    "get_budget_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves the authenticated user's household grocery spending summary including total spend, savings, and category breakdown from NoshUp's database without modifying any financial records.",
+        "open_world_justification": "Only reads from the user's private household budget data in NoshUp and does not interact with external financial systems.",
+        "destructive_justification": "Does not delete, overwrite, or perform any irreversible actions on budget or financial data."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Search for vegetarian meals across all cuisines.",
+      "user_prompt": "Find me some vegetarian meals I can cook this week.",
+      "file_attachment_urls": null,
+      "tools_triggered": "search_meals",
+      "expected_output": "Returns a list of meals matching the vegetarian dietary constraint, each with name, cuisine, meal type, prep time, serves, kid-friendly flag, and nutrition notes.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Search for a specific ingredient in grocery flyer deals.",
+      "user_prompt": "What's the best deal on paneer this week?",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_flyer_deals",
+      "expected_output": "Returns current flyer deals matching 'paneer' across Canadian grocery stores, with item name, store, deal price, regular price, savings percentage, and expiry date.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Retrieve the current week's meal plan.",
+      "user_prompt": "What meals do I have planned for this week?",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_meal_plan",
+      "expected_output": "Returns the authenticated user's weekly meal plan with entries for each day, including meal type, meal name, cuisine, prep time, and serves.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Check the grocery list for the current week.",
+      "user_prompt": "What's on my grocery list this week?",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_grocery_list",
+      "expected_output": "Returns the user's grocery list with deduplicated items, quantities, units, categories, estimated prices, matched deal prices, and check-off status.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Check grocery budget spending over the last 3 months.",
+      "user_prompt": "How much have I spent on groceries in the last 3 months?",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_budget_summary",
+      "expected_output": "Returns a budget summary with total spend, spend by category, and savings (deal savings, subscription cost, ROI multiplier) for the 3-month period.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not trigger for meal planning creation or modification requests.",
+      "user_prompt": "Create a new meal plan for next week with Indian dishes.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because NoshUp's MCP tools are read-only and cannot create, modify, or delete meal plans.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for grocery ordering or purchasing requests.",
+      "user_prompt": "Order groceries from FreshCo and have them delivered.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because NoshUp does not support ordering, purchasing, or delivering groceries.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for general cooking help outside NoshUp's recipe catalogue.",
+      "user_prompt": "How do I make a sourdough starter from scratch?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because the request is for general cooking guidance, not searching NoshUp's meal catalogue or viewing the user's household data.",
+      "expected_output_url": null
+    }
+  ]
+}
