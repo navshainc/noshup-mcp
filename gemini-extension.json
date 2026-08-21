@@ -1,0 +1,17 @@
+{
+  "name": "noshup",
+  "version": "1.0.0",
+  "description": "AI-first meal planning for Canadian households. Generate weekly meal plans, grocery lists, check flyer deals, and track grocery budgets -- all from Gemini.",
+  "mcpServers": {
+    "noshup": {
+      "url": "https://api.noshup.ca/mcp",
+      "transport": "streamable-http",
+      "auth": {
+        "type": "oauth"
+      }
+    }
+  },
+  "homepage": "https://noshup.ca",
+  "repository": "https://github.com/navshainc/noshup-mcp",
+  "categories": ["food", "lifestyle", "productivity"]
+}
